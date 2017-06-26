@@ -7,11 +7,11 @@ function finish {
 trap finish EXIT
 
 if [ ! -f "/var/lib/mysql/ibdata1" ]; then
-    echo "Initializing database"
+    echo "$(date +%H:%M:%S)  Initializing MySQL system database"
     /usr/bin/mysql_install_db
-    echo "Database initialized"
+    echo "$(date +%H:%M:%S)  MySQL system database initialized"
     chown -R mysql:mysql /var/lib/mysql
-    chown -R mysql:mysql /var/run/mariadb
+    chown -R mysql:mysql /var/run/mysqld
 fi
 
 if [ ! -d "/var/lib/mysql/slurm_acct_db" ]; then
@@ -21,16 +21,16 @@ if [ ! -d "/var/lib/mysql/slurm_acct_db" ]; then
         if echo "SELECT 1" | mysql &> /dev/null; then
             break
         fi
-        echo "Starting MariaDB"
+        echo "$(date +%H:%M:%S)  Starting MySQL temporarily"
         sleep 1
     done
 
     if [ "$i" = 0 ]; then
-        echo >&2 "MariaDB did not start"
+        echo >&2 "$(date +%H:%M:%S)  MySQL did not start"
         exit 1
     fi
 
-    echo "Creating Slurm acct database"
+    echo "$(date +%H:%M:%S)  Creating Slurm acct database"
     mysql -NBe "CREATE DATABASE slurm_acct_db"
     mysql -NBe "CREATE USER 'slurm'@'localhost'"
     mysql -NBe "SET PASSWORD for 'slurm'@'localhost' = password('password')"
@@ -38,8 +38,9 @@ if [ ! -d "/var/lib/mysql/slurm_acct_db" ]; then
     mysql -NBe "GRANT ALL PRIVILEGES on slurm_acct_db.* to 'slurm'@'localhost'"
     mysql -NBe "FLUSH PRIVILEGES"
     echo "Slurm acct database created"
-    echo "Stopping MariaDB"
+    echo "Stopping MySQL after creating Slurm acct database"
     killall mysqld
+
     for i in {30..0}; do
         if echo "SELECT 1" | mysql &> /dev/null; then
             sleep 1
@@ -48,14 +49,14 @@ if [ ! -d "/var/lib/mysql/slurm_acct_db" ]; then
         fi
     done
     if [ "$i" = 0 ]; then
-        echo >&2 "MariaDB did not stop"
+        echo >&2 "$(date +%H:%M:%S)  MySQL did not stop"
         exit 1
     fi
 fi
 
 chown slurm:slurm /var/spool/slurmd /var/run/slurmd /var/lib/slurmd /var/log/slurm
 
-echo "Starting all processes"
-/usr/bin/supervisord --configuration /etc/supervisord.conf
+echo "$(date +%H:%M:%S)  Starting all processes via supervisord"
+/usr/bin/supervisord -c /etc/supervisord.conf
 
 exec "$@"
