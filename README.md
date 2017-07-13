@@ -1,5 +1,10 @@
 # Slurm on CentOS 6 Docker Image
 
+[![Docker Build Status](https://img.shields.io/docker/build/giovtorres/docker-centos6-slurm.svg)](https://hub.docker.com/r/giovtorres/docker-centos6-slurm/builds/)
+[![Docker Automated build](https://img.shields.io/docker/automated/giovtorres/docker-centos6-slurm.svg)](https://hub.docker.com/r/giovtorres/docker-centos6-slurm/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/giovtorres/docker-centos6-slurm.svg)](https://hub.docker.com/r/giovtorres/docker-centos6-slurm/)
+[![](https://images.microbadger.com/badges/image/giovtorres/docker-centos6-slurm.svg)](https://microbadger.com/images/giovtorres/docker-centos6-slurm "Get your own image badge on microbadger.com")
+
 This is an all-in-one [Slurm](https://slurm.schedmd.com/) installation.  This
 container runs the following processes:
 
