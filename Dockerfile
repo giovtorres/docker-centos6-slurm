@@ -1,6 +1,11 @@
 FROM centos:6
 MAINTAINER Giovanni Torres
 
+LABEL org.label-schema.vcs-url="https://github.com/giovtorres/docker-centos6-slurm" \
+      org.label-schema.docker.cmd="docker run -it -h ernie giovtorres/docker-centos6-slurm:latest" \
+      org.label-schema.name="docker-centos6-slurm" \
+      org.label-schema.description="Slurm All-in-one Docker container on CentOS 6"
+
 ENV SLURM_VERSION 17.02.6
 ENV SLURM_DOWNLOAD_MD5 93d5afd7a18680923b08aefa528ba9db
 ENV SLURM_DOWNLOAD_URL https://www.schedmd.com/downloads/latest/slurm-"$SLURM_VERSION".tar.bz2
