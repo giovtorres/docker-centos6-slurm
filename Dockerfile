@@ -8,7 +8,7 @@ LABEL org.label-schema.vcs-url="https://github.com/giovtorres/docker-centos6-slu
 
 ENV SLURM_VERSION 17.11.0-0rc2
 ENV SLURM_DOWNLOAD_MD5 e1851c120199ea82b4aae414c7c82737
-ENV SLURM_DOWNLOAD_URL https://www.schedmd.com/downloads/latest/slurm-"$SLURM_VERSION".tar.bz2
+ENV SLURM_DOWNLOAD_URL https://download.schedmd.com/slurm/slurm-"$SLURM_VERSION".tar.bz2
 
 RUN yum makecache fast \
     && yum -y install epel-release \
@@ -31,7 +31,8 @@ RUN yum makecache fast \
         bash-completion \
     && yum clean all
 
-RUN pip install --upgrade Cython nose nose2 supervisor setuptools
+RUN pip install --upgrade Cython nose supervisor setuptools
+
 RUN groupadd -r slurm && useradd -r -g slurm slurm
 
 RUN set -x \
