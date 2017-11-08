@@ -6,8 +6,8 @@ LABEL org.label-schema.vcs-url="https://github.com/giovtorres/docker-centos6-slu
       org.label-schema.name="docker-centos6-slurm" \
       org.label-schema.description="Slurm All-in-one Docker container on CentOS 6"
 
-ENV SLURM_VERSION 17.02.7
-ENV SLURM_DOWNLOAD_MD5 64009c1ed120b9ce5d79424dca743a06
+ENV SLURM_VERSION 17.11.0-0rc2
+ENV SLURM_DOWNLOAD_MD5 e1851c120199ea82b4aae414c7c82737
 ENV SLURM_DOWNLOAD_URL https://www.schedmd.com/downloads/latest/slurm-"$SLURM_VERSION".tar.bz2
 
 RUN yum makecache fast \
