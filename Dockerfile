@@ -6,7 +6,9 @@ LABEL org.label-schema.vcs-url="https://github.com/giovtorres/docker-centos6-slu
       org.label-schema.name="docker-centos6-slurm" \
       org.label-schema.description="Slurm All-in-one Docker container on CentOS 6"
 
-ENV SLURM_DOWNLOAD_URL https://github.com/SchedMD/slurm/archive/slurm-17-02-8-1.tar.gz
+ENV SLURM_VERSION 17.02.9
+ENV SLURM_DOWNLOAD_MD5 6bd0b38e6bf08f3426a7dd1e663a2e3c
+ENV SLURM_DOWNLOAD_URL https://download.schedmd.com/slurm/slurm-"$SLURM_VERSION".tar.bz2
 
 RUN yum makecache fast \
     && yum -y install epel-release \
@@ -35,8 +37,9 @@ RUN groupadd -r slurm && useradd -r -g slurm slurm
 
 RUN set -x \
     && wget -O slurm.tar.bz2 "$SLURM_DOWNLOAD_URL" \
+    && echo "$SLURM_DOWNLOAD_MD5 slurm.tar.bz2" | md5sum -c - \
     && mkdir /usr/local/src/slurm \
-    && tar xzf slurm.tar.bz2 -C /usr/local/src/slurm --strip-components=1 \
+    && tar jxf slurm.tar.bz2 -C /usr/local/src/slurm --strip-components=1 \
     && rm slurm.tar.bz2 \
     && cd /usr/local/src/slurm \
     && ./configure --enable-debug --enable-front-end --prefix=/usr \
