@@ -37,7 +37,7 @@ RUN groupadd -r slurm && useradd -r -g slurm slurm
 
 RUN set -x \
     && wget -O slurm.tar.bz2 "$SLURM_DOWNLOAD_URL" \
-    && echo "$SLURM_DOWNLOAD_MD5 slurm.tar.bz2" | md5sum -c - \
+    && echo "$SLURM_DOWNLOAD_MD5  slurm.tar.bz2" | md5sum -c - \
     && mkdir /usr/local/src/slurm \
     && tar jxf slurm.tar.bz2 -C /usr/local/src/slurm --strip-components=1 \
     && rm slurm.tar.bz2 \
