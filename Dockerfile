@@ -6,9 +6,7 @@ LABEL org.label-schema.vcs-url="https://github.com/giovtorres/docker-centos6-slu
       org.label-schema.description="Slurm All-in-one Docker container on CentOS 6" \
       maintainer="Giovanni Torres"
 
-ARG SLURM_VERSION=17.11.3-2
-ARG SLURM_DOWNLOAD_MD5=30cb15ae222a142107919383387abbeb
-ARG SLURM_DOWNLOAD_URL=https://download.schedmd.com/slurm/slurm-"$SLURM_VERSION".tar.bz2
+ARG SLURM_TAG=slurm-17-11-3-2
 
 RUN yum makecache fast \
     && yum -y install epel-release \
@@ -32,17 +30,16 @@ RUN yum makecache fast \
     && yum clean all \
     && rm -rf /var/cache/yum
 
-RUN pip install --upgrade Cython nose supervisor
+RUN pip install --upgrade setuptools==36.8.0 \
+    && pip install --upgrade pip==9.0.3 \
+    && pip install --upgrade Cython nose supervisor
 
 RUN groupadd -r slurm && useradd -r -g slurm slurm
 
 RUN set -x \
-    && wget -O slurm.tar.bz2 "$SLURM_DOWNLOAD_URL" \
-    && echo "$SLURM_DOWNLOAD_MD5  slurm.tar.bz2" | md5sum -c - \
-    && mkdir /usr/local/src/slurm \
-    && tar jxf slurm.tar.bz2 -C /usr/local/src/slurm --strip-components=1 \
-    && rm slurm.tar.bz2 \
-    && cd /usr/local/src/slurm \
+    && git clone https://github.com/SchedMD/slurm.git \
+    && pushd slurm \
+    && git checkout tags/$SLURM_TAG \
     && ./configure --enable-debug --enable-front-end --prefix=/usr \
        --sysconfdir=/etc/slurm --with-mysql_config=/usr/bin \
        --libdir=/usr/lib64 \
@@ -52,7 +49,7 @@ RUN set -x \
     && install -D -m644 etc/slurm.epilog.clean /etc/slurm/slurm.epilog.clean \
     && install -D -m644 etc/slurmdbd.conf.example /etc/slurm/slurmdbd.conf.example \
     && install -D -m644 contribs/slurm_completion_help/slurm_completion.sh /etc/profile.d/slurm_completion.sh \
-    && cd \
+    && popd \
     && rm -rf /usr/local/src/slurm \
     && mkdir -m 0755 /var/run/munge \
     && mkdir /var/log/supervisor \
