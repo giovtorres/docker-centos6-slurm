@@ -6,7 +6,7 @@ LABEL org.label-schema.vcs-url="https://github.com/giovtorres/docker-centos6-slu
       org.label-schema.description="Slurm All-in-one Docker container on CentOS 6" \
       maintainer="Giovanni Torres"
 
-ARG SLURM_TAG=17-11-6-1
+ARG SLURM_TAG=slurm-17-11-6-1
 
 RUN yum makecache fast \
     && yum -y install epel-release \
@@ -37,7 +37,7 @@ RUN groupadd -r slurm && useradd -r -g slurm slurm
 RUN set -x \
     && git clone https://github.com/SchedMD/slurm.git \
     && pushd slurm \
-    && git checkout tags/$SLURM_TAG -b $SLURM_TAG
+    && git checkout tags/$SLURM_TAG \
     && ./configure --enable-debug --enable-front-end --prefix=/usr \
        --sysconfdir=/etc/slurm --with-mysql_config=/usr/bin \
        --libdir=/usr/lib64 \
@@ -48,7 +48,7 @@ RUN set -x \
     && install -D -m644 etc/slurmdbd.conf.example /etc/slurm/slurmdbd.conf.example \
     && install -D -m644 contribs/slurm_completion_help/slurm_completion.sh /etc/profile.d/slurm_completion.sh \
     && popd \
-    && rm slurm \
+    && rm -rf slurm \
     && mkdir -m 0755 /var/run/munge \
     && mkdir /var/log/supervisor \
     && chown munge:munge /var/run/munge \
