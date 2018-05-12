@@ -32,7 +32,7 @@ RUN yum makecache fast \
     && yum clean all \
     && rm -rf /var/cache/yum
 
-RUN pip install --upgrade Cython nose supervisor
+RUN pip install --upgrade Cython nose supervisor setuptools==36.8.0
 
 RUN groupadd -r slurm && useradd -r -g slurm slurm
 
